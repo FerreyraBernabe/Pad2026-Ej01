@@ -12,7 +12,10 @@ namespace Pad2026_Ej01
 {
     public partial class Productos : System.Web.UI.Page
     {
-        
+        private void GetQuery() 
+        {
+
+        }
         private void LoadProducts(string nombreProd="") 
         {
             SqlConnection connection = new SqlConnection(
@@ -46,6 +49,29 @@ namespace Pad2026_Ej01
             gvProductos.DataBind();
             
         }
+        private void SortItems(string columna)
+        {
+            SqlConnection connection = new SqlConnection(
+                "Data Source=(LocalDB)\\MSSQLLocalDB;" +
+                "AttachDbFilename=\"C:\\Users\\User\\Documents\\U\\4to año\\" +
+                "Programación de Aplicaciones Distribuidas\\Pad2026Ej01\\Pad2026-Ej01\\Pad2026-Ej01\\App_Data\\StarCO.mdf\";" +
+                "Integrated Security=True"); //TODO: refactorizar esto para que lo lea de otro lado y todos puedan acceder...
+            connection.Open();
+            SqlCommand query = new SqlCommand("SELECT IdProd, Descripcion, Precio FROM Producto");
+            query.Connection = connection;
+
+            DataTable data = new DataTable();
+
+            using (SqlDataAdapter adapter = new SqlDataAdapter(query))
+            {
+                adapter.Fill(data);
+            }
+            DataView dv = data.DefaultView;
+            dv.Sort = $"{columna} DESC";
+            gvProductos.DataSource = dv;
+            gvProductos.DataBind();
+
+        }
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack) 
@@ -58,9 +84,9 @@ namespace Pad2026_Ej01
         {
             LoadProducts(txtBuscar.Text);
         }
-
-        protected void gvProductos_SelectedIndexChanged(object sender, EventArgs e)
+        protected void gvProductos_OnSorting(object sender, GridViewSortEventArgs e) 
         {
+            SortItems(e.SortExpression);
         }
     }
 }

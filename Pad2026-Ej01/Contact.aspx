@@ -2,18 +2,50 @@
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <main aria-labelledby="title">
-        <h2 id="title"><%: Title %>.</h2>
-        <h3>Your contact page.</h3>
-        <address>
-            One Microsoft Way<br />
-            Redmond, WA 98052-6399<br />
-            <abbr title="Phone">P:</abbr>
-            425.555.0100
-        </address>
+        <section>
+            <h1>Nuestras oficinas</h1>
+            <p>
+                En STAR, priorizamos el vínculo con el cliente. 
+                Por ello, abrimos las puertas de nuestras oficinas para que puedan conocer más sobre nosotros.
+            </p>
+            <h2>Encontranos en</h2>
+            <p>
+                <strong>Provincia:
+                </strong>
+            </p>
+            <p>
+                <strong>Calle:
+                </strong>
+            </p>
+            <p>
+                <strong>Código Postal:
+                </strong>
+            </p>
+        </section>
+        <section>
+            <h2>Contacta con nosotros</h2>
+            <form>
+                <label>Nombre: </label>
+                <input type="text" />
+                <label>Email: </label>
+                <input type="email" />
 
-        <address>
-            <strong>Support:</strong>   <a href="mailto:Support@example.com">Support@example.com</a><br />
-            <strong>Marketing:</strong> <a href="mailto:Marketing@example.com">Marketing@example.com</a>
-        </address>
+                <button name="btn-enviar">Enviar</button>
+            </form>
+        </section>
+        <section>
+            <h3>Nuestras redes</h3>
+            <section class="redes">
+                <div class="card-redsocial">
+                    Facebook
+                </div>
+                <div class="card-redsocial">
+                    Twitter
+                </div>
+                <div class="card-redsocial">
+                    Instagram
+                </div>
+            </section>
+        </section>
     </main>
 </asp:Content>

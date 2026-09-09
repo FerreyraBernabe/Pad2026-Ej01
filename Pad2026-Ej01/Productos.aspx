@@ -8,10 +8,10 @@
         </header>
         <div class="search-bar">
             <label>Buscar</label>
-            <input type="text"/>
-            <asp:Button ID="btnBuscar" type="submit" runat="server" Text="Realizar búsqueda"/>
+            <asp:TextBox ID="txtBuscar" type="text" runat="server"/>
+            <asp:Button ID="btnBuscar" type="submit" runat="server" Text="Realizar búsqueda" OnClick="btnBuscar_Click"/>
         </div>
-        <asp:GridView ID="gvProductos" runat="server" Height="267px" Width="476px">
+        <asp:GridView ID="gvProductos" runat="server" Height="267px" Width="476px" AllowSorting="True" OnSelectedIndexChanged="gvProductos_SelectedIndexChanged">
             
         </asp:GridView>
     </main>

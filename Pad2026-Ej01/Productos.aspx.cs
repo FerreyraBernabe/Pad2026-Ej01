@@ -14,17 +14,13 @@ namespace Pad2026_Ej01
 {
     public partial class Productos : System.Web.UI.Page
     {
-        private void GetQuery() 
-        {
-
-        }
         private void LoadProducts(string nombreProd="") 
         {
-            SqlConnection connection = new SqlConnection(
-                "Data Source=(LocalDB)\\MSSQLLocalDB;" +
-                "AttachDbFilename=\"C:\\Users\\User\\Documents\\U\\4to año\\" +
-                "Programación de Aplicaciones Distribuidas\\Pad2026Ej01\\Pad2026-Ej01\\Pad2026-Ej01\\App_Data\\StarCO.mdf\";" +
-                "Integrated Security=True"); //TODO: refactorizar esto para que lo lea de otro lado y todos puedan acceder...
+            SqlConnection connection = new SqlConnection(""); //TODO: refactorizar esto para que lo lea de otro lado y todos puedan acceder...
+            if (connection.ConnectionString.IsNullOrWhiteSpace())
+            {
+                throw new Exception("PONE TU STRING CONNECTION ACÁ ARRIBA:v");
+            }
             connection.Open();
             SqlCommand query = new SqlCommand();
             query.Connection = connection;
@@ -53,11 +49,11 @@ namespace Pad2026_Ej01
         }
         private void SortItems(string columna)
         {
-            SqlConnection connection = new SqlConnection(
-                "Data Source=(LocalDB)\\MSSQLLocalDB;" +
-                "AttachDbFilename=\"C:\\Users\\User\\Documents\\U\\4to año\\" +
-                "Programación de Aplicaciones Distribuidas\\Pad2026Ej01\\Pad2026-Ej01\\Pad2026-Ej01\\App_Data\\StarCO.mdf\";" +
-                "Integrated Security=True"); //TODO: refactorizar esto para que lo lea de otro lado y todos puedan acceder...
+            SqlConnection connection = new SqlConnection(""); //TODO: refactorizar esto para que lo lea de otro lado y todos puedan acceder...
+            if (connection.ConnectionString.IsNullOrWhiteSpace())
+            {
+                throw new Exception("PONE TU STRING CONNECTION ACÁ ARRIBA:v");
+            }
             connection.Open();
             SqlCommand query = new SqlCommand("SELECT IdProd, Descripcion, Precio FROM Producto");
             query.Connection = connection;
@@ -161,10 +157,11 @@ namespace Pad2026_Ej01
 
         public void GuardarProducto(string descripcion, decimal precio)
         {
-            SqlConnection connection = new SqlConnection(
-                "Data Source=(LocalDB)\\MSSQLLocalDB;" +
-                "AttachDbFilename=\"C:\\Users\\Fernando\\Documents\\Programa\\Pad2026-Ej01\\Pad2026-Ej01\\App_Data\\StarCO.mdf\"; " +
-                "Integrated Security=True");
+            SqlConnection connection = new SqlConnection("");
+            if (connection.ConnectionString.IsNullOrWhiteSpace()) 
+            {
+                throw new Exception("PONE TU STRING CONNECTION ACÁ ARRIBA:v");
+            }
             connection.Open();
 
             SqlCommand query = new SqlCommand("INSERT INTO dbo.Producto (Descripcion, Precio) VALUES (@Descripcion, @Precio)", connection);

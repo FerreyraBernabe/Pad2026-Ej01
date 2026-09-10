@@ -279,3 +279,6 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+!/Pad2026-Ej01/App_Data/StarCO.mdf
+!/Pad2026-Ej01/App_Data/StarCO_log.ldf

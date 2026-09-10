@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -16,8 +18,7 @@ namespace Pad2026_Ej01
         {
             SqlConnection connection = new SqlConnection(
                 "Data Source=(LocalDB)\\MSSQLLocalDB;" +
-                "AttachDbFilename=\"C:\\Users\\User\\Documents\\U\\4to año\\" +
-                "Programación de Aplicaciones Distribuidas\\Pad2026Ej01\\Pad2026-Ej01\\Pad2026-Ej01\\App_Data\\StarCO.mdf\";" +
+                "AttachDbFilename=\"C:\\Users\\Fernando\\Documents\\Programa\\Pad2026-Ej01\\Pad2026-Ej01\\App_Data\\StarCO.mdf\"; " +
                 "Integrated Security=True");
             connection.Open();
             SqlCommand query = new SqlCommand("SELECT IdProd," +
@@ -38,6 +39,105 @@ namespace Pad2026_Ej01
             if (!IsPostBack) 
             {
                 LoadProducts();
+            }
+        }
+
+        protected void AbrirModalProducto()
+        {
+            string script = @"
+                bootstrap.Modal.getOrCreateInstance(
+                    document.getElementById('modalAgregarProducto')
+                ).show();";
+            System.Web.UI.ScriptManager.RegisterStartupScript(
+                this,
+                GetType(),
+                "AbrirModalProducto",
+                script,
+                true
+            );
+        }
+
+        protected void btnGuardarProducto_Click(object sender, EventArgs e)
+        {
+            lblErrorProducto.Text = "";
+
+            Page.Validate("AltaProducto");
+
+            if (!Page.IsValid)
+            {
+                AbrirModalProducto();
+                return;
+            }
+
+            string descripcion = txtDescripcion.Text.Trim();
+
+            if (string.IsNullOrWhiteSpace(descripcion) || descripcion.Length > 250)
+            {
+                lblErrorProducto.Text = "Ingresá una descripción de hasta 250 caracteres.";
+                AbrirModalProducto();
+                return;
+            }
+
+            bool precioValido = decimal.TryParse(
+                txtPrecio.Text.Trim(),
+                NumberStyles.AllowDecimalPoint,
+                CultureInfo.GetCultureInfo("es-AR"),
+                out decimal precio
+            );
+
+            if (!precioValido || precio < 0 || precio > 99999999.99m
+                || decimal.Round(precio, 2) != precio)
+            {
+                lblErrorProducto.Text =
+                    "Ingresá un precio entre 0 y 99999999,99, con hasta dos decimales. Usá coma y sin separador de miles.";
+
+                AbrirModalProducto();
+                return;
+            }
+
+            try
+            {
+                GuardarProducto(descripcion, precio);
+            }
+            catch (SqlException)
+            {
+                lblErrorProducto.Text = "No se pudo guardar el producto. Intentá nuevamente.";
+                AbrirModalProducto();
+                return;
+            }
+
+            txtDescripcion.Text = "";
+            txtPrecio.Text = "";
+
+            LoadProducts();
+        }
+
+        public void GuardarProducto(string descripcion, decimal precio)
+        {
+            SqlConnection connection = new SqlConnection(
+                "Data Source=(LocalDB)\\MSSQLLocalDB;" +
+                "AttachDbFilename=\"C:\\Users\\Fernando\\Documents\\Programa\\Pad2026-Ej01\\Pad2026-Ej01\\App_Data\\StarCO.mdf\"; " +
+                "Integrated Security=True");
+            connection.Open();
+
+            SqlCommand query = new SqlCommand("INSERT INTO dbo.Producto (Descripcion, Precio) VALUES (@Descripcion, @Precio)", connection);
+            using (query)
+            {
+                query.Parameters.Add(
+                   "@Descripcion",
+                    SqlDbType.NVarChar,
+                    250
+                ).Value = descripcion;
+
+                SqlParameter parametroPrecio =
+                    query.Parameters.Add("@Precio", SqlDbType.Decimal);
+
+                parametroPrecio.Precision = 10;
+                parametroPrecio.Scale = 2;
+                parametroPrecio.Value = precio;
+
+
+                query.ExecuteNonQuery();
             }
         }
     }
